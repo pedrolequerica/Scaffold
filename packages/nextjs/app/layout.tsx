@@ -12,8 +12,8 @@ const imageUrl = `${baseUrl}/thumbnail.jpg`;
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "Scaffold-ETH 2 App",
-    template: "%s | Scaffold-ETH 2",
+    default: "Green Goblin Login",
+    template: "%s | Green Goblin Login",
   },
   description: "Built with 🏗 Scaffold-ETH 2",
   openGraph: {
@@ -38,7 +38,13 @@ export const metadata: Metadata = {
     description: "Built with 🏗 Scaffold-ETH 2",
   },
   icons: {
-    icon: [{ url: "/favicon.png", sizes: "32x32", type: "image/png" }],
+    icon: [
+      {
+        url: "search-dollar.png",
+        sizes: "32x32",
+        type: "image/png",
+      },
+    ],
   },
 };
 
