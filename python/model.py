@@ -2,6 +2,7 @@ from HistoricalChainlinkData import HistoricalChainlinkData
 import datetime
 from config import *
 import  math
+import pandas
 from sklearn import linear_model
 import statsmodels.api as sm
 
@@ -45,16 +46,20 @@ class Model():
         historicalData['Date'] = times
         historicalData.dropna(inplace=True)
         print(historicalData)
-        self.mv_regress(historicalData)
+        self.params = self.mv_regress(historicalData,features,results)
 
     @staticmethod
-    def mv_regress(historicalData):
+    def mv_regress(historicalData,features,results):
         train_test_split=0.7
-        print(type(historicalData))
-        print([list(features.keys())])
-
-        X = historicalData[[list(features.keys())]]
-        Y = historicalData[list(results.keys())]
+        print(historicalData)
+        X = pandas.DataFrame()
+        features = list(features.keys())
+        for feature in features:
+            X[feature] = historicalData.loc[historicalData['Metric']==feature]['Value']
+        Y = pandas.DataFrame()
+        results = list(results.keys())
+        for result in results:
+            Y = historicalData.loc[historicalData['Metric']==result]['Value']
         X_train = X[0:round(train_test_split*len(X))]
         Y_train = Y[0:round(train_test_split*len(Y))]
         X_test = X[round(train_test_split*len(X)) + 1:-1]
@@ -63,10 +68,14 @@ class Model():
         regr.fit(X_train, Y_train)
         print('Intercept: \n', regr.intercept_)
         print('Coefficients: \n', regr.coef_)
+        return (features,results, regr.intercept_, regr.coef_)
 
-
-    def test(self):
-        pass
+    def fetch(self,input,params):
+        res = 0
+        for feature in list(params)[0]:
+            res = res + (float(input[feature])*list(params)[-1][list(params)[0].index(feature)])
+        res = res + list(params)[-2]
+        return res
 
 def main():
     model = Model(features,results,30)
